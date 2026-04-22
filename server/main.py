@@ -8,7 +8,7 @@ from app.ingestion import ingest_document
 from app.retriever import store_documents, get_retriver
 from app.chain import get_qa_chain
 from server.models import DocumentResponse, QuestionRequest, AnswerResponse, SourceDocument
-from app.config import UPLOAD_DIR,QDRANT_PORT,QDRANT_HOST,QDRANT_COLLECTION_NAME
+from app.config import UPLOAD_DIR,QDRANT_URL,QDRANT_API_KEY,QDRANT_COLLECTION_NAME
 import os
 import asyncio
 
@@ -29,7 +29,7 @@ def save_file(path, data):
         f.write(data)
 
 def delete_from_qdrant(file_path):
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    client = QdrantClient(host=QDRANT_URL, api_key=QDRANT_API_KEY)
     delete_filter = Filter(
         must=[
             FieldCondition(
