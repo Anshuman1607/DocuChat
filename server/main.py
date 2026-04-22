@@ -85,33 +85,36 @@ async def upload_document(file: UploadFile = File(...)):
 #asking question about PDF
 @app.post("/ask", response_model=AnswerResponse)
 async def ask_question(request: QuestionRequest):
-    question = request.question.strip()
+   try:
+     question = request.question.strip()
 
-    if not question:
+     if not question:
         raise HTTPException(400, "Question cannot be empty")
     
-    loop = asyncio.get_event_loop()
+     loop = asyncio.get_event_loop()
 
-    chain = await loop.run_in_executor(None, get_qa_chain)
+     chain = await loop.run_in_executor(None, get_qa_chain)
+    
+     response = await loop.run_in_executor(None, chain.invoke,{"input":question})
 
-    response = await loop.run_in_executor(None, chain.invoke,{"input":question})
+     result = response["answer"]
 
-    result = response["answer"]
+     documents = response["context"]
 
-    documents = response["context"]
+     source = []
+     for doc in documents:
+         source.append(SourceDocument(
+             content = doc.page_content,
+             page = doc.metadata.get("page"),
+             source = doc.metadata.get("source")
+         ) )
 
-    source = []
-    for doc in documents:
-        source.append(SourceDocument(
-            content = doc.page_content,
-            page = doc.metadata.get("page"),
-            source = doc.metadata.get("source")
-        ))
-
-    return AnswerResponse(
-        answer=result,
-        sources=source
-    )
+     return AnswerResponse(
+         answer=result,
+         sources=source
+     )
+    except Exception as e:
+        raise HTTPException(500, f"Error processing question: {str(e)}")
 
 # getting all uploded pdf files
 @app.get("/documents")
