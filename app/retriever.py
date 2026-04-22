@@ -2,10 +2,10 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Filter,FieldCondition,MatchValue
 from app.embeddings import get_embedding_model
-from app.config import QDRANT_HOST,QDRANT_PORT,QDRANT_COLLECTION_NAME
+from app.config import QDRANT_URL,QDRANT_API_KEY,QDRANT_COLLECTION_NAME
 
 def store_documents(chunks, file_path) -> dict:
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    client = QdrantClient(host=QDRANT_URL, api_key=QDRANT_API_KEY)
 
     records = []
 
@@ -37,7 +37,7 @@ def store_documents(chunks, file_path) -> dict:
     return {"status": "success", "message": "Document stored successfully"}
 
 def get_retriver():
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    client = QdrantClient(host=QDRANT_URL, api_key=QDRANT_API_KEY)
     vector_db = QdrantVectorStore(
         collection_name=QDRANT_COLLECTION_NAME,
         client=client,
