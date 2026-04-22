@@ -113,7 +113,7 @@ async def ask_question(request: QuestionRequest):
          answer=result,
          sources=source
      )
-    except Exception as e:
+   except Exception as e:
         raise HTTPException(500, f"Error processing question: {str(e)}")
 
 # getting all uploded pdf files
