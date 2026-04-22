@@ -218,17 +218,6 @@ This prevents hallucination — the LLM can only answer using what's in your doc
 
 ---
 
-## Future Improvements
-
-- Support for `.txt` and `.docx` files
-- Streaming responses (token by token)
-- User authentication
-- Deploy on Railway / Render
-- Multi-user support
-- Conversation memory across turns
-
----
-
 ## License
 
 MIT
