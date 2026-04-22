@@ -31,7 +31,8 @@ def store_documents(chunks, file_path) -> dict:
     vector_db = QdrantVectorStore.from_documents(
         documents=chunks,
         embedding=get_embedding_model(),
-        collection_name=QDRANT_COLLECTION_NAME
+        collection_name=QDRANT_COLLECTION_NAME,
+        client=client
     )
 
     return {"status": "success", "message": "Document stored successfully"}
